@@ -1,24 +1,34 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
-  const {id} = useParams();
-
   return (
-    <Link to={`/products/${product.id}`}>
-    <div key={product.id} className="bg-white  text-black rounded-lg border-gray-800 mb-3 p-4">
-  <img
-  src={product.image}
-  alt=""
-  className="w-full"
-  />
-  <h1 className="text-lg font-bold"> 
-    {product.name}  
-  </h1>
-  <h2 className="text-2xl" >
-    {product.price}
-  </h2>
-
-</div>
+    <Link to={`/products/${product.id}`} className="block w-full">
+      <div 
+        key={product.id} 
+        className="bg-white text-black rounded-lg mb-3 p-4 w-full h-64 flex flex-col"
+        style={{
+          boxShadow: '0 4px 6px -1px rgba(46, 41, 78, 0.3), 0 2px 4px -1px rgba(46, 41, 78, 0.2)'
+        }}
+      >
+        {/* Contenedor de imagen con tamaño fijo */}
+        <div className="h-40 flex-grow-0 overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-contain"
+          />
+        </div>
+        
+        {/* Contenido */}
+        <div className="mt-2 text-center flex flex-col justify-end flex-grow">
+          <h5 className="text-lg font-medium line-clamp-2">
+            {product.name}  
+          </h5>
+          <h2 className="text-xl font-semibold text-gray-800 mt-2">
+            ${product.price}
+          </h2>
+        </div>
+      </div>
     </Link>
   );
 }

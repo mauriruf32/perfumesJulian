@@ -8,4 +8,4 @@ export const verifyTokenRequest = () => axios.get(`/verify`);
 
 export const getUserProfileRequest = () => axios.get(`/profile`);
 
-export const updateUserProfileRequest = (id, user) => axios.put(`/profile/${id}`, user);
+export const updateUserProfileRequest = (id, user) => axios.put(`/users/${id}`, user);

@@ -50,7 +50,7 @@ export function ProductProvider({ children }) {
     const deleteProduct = async (id) => {
         try {
         const res = await deleteProductRequest(id);
-        if (res.status = 204) setProducts(products.filter(product => product.id != id));
+        if (res.status === 204) setProducts(products.filter(product => product.id != id));
             
         } catch (error) {
         console.log(error);
