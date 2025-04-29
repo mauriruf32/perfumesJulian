@@ -1,5 +1,5 @@
 import express from "express";
-import {PORT} from "./config.js";
+import {PORT, URL} from "./config.js";
 import userRoutes from "./routes/users.routes.js";
 import productsRoutes from "./routes/products.routes.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -11,7 +11,7 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin: URL,
     credentials: true
 }))
 

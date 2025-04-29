@@ -7,4 +7,6 @@ export const DB_PASSWORD = process.env.DB_PASSWORD
 export const DB_DATABASE = process.env.DB_DATABASE
 export const DB_PORT = process.env.DB_PORT
 
+export const URL = process.env.URL
+
 export const PORT = process.env.PORT || 4000;
