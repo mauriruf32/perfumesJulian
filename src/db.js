@@ -11,7 +11,7 @@ import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER, POSTGRES_URL } fro
 //     port: DB_PORT,
 // });
 
-export const pool = new Pool({
+export const pool = new pg.Pool({
     connectionString: process.env.POSTGRES_URL,
     ssl: {
       rejectUnauthorized: false,
@@ -29,7 +29,7 @@ export const pool = new Pool({
 //     console.log(result)
 // })
 
-pool.connect((err)=>{
-    if (err) throw err
-    console.log("conect succcess");
-})
+// pool.connect((err)=>{
+//     if (err) throw err
+//     console.log("conect succcess");
+// })
