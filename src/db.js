@@ -1,6 +1,7 @@
 import pg from 'pg';
-// import  Pool  from 'pg';
-import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from './config.js';
+// const { Pool } = require('pg')
+import  Pool  from 'pg';
+import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER, POSTGRES_URL } from './config.js';
 
 // export const pool = new pg.Pool({
 //     user: DB_USER,
@@ -10,14 +11,25 @@ import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from './config.js
 //     port: DB_PORT,
 // });
 
-
-export const pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
+export const pool = new Pool({
+    connectionString: process.env.POSTGRES_URL,
     ssl: {
       rejectUnauthorized: false,
     },
   });
 
+// export const pool = new pg.Pool({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//       rejectUnauthorized: false,
+//     },
+//   });
+
 // pool.query('SELECT NOW()').then(result => {
 //     console.log(result)
 // })
+
+pool.connect((err)=>{
+    if (err) throw err
+    console.log("conect succcess");
+})
