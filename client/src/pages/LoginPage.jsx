@@ -18,7 +18,7 @@ function LoginPage() {
   }, [isAuthenticated])
 
   return (
-    <div class="flex h-[calc(100vh-100px)] items-center justify-center">
+    <div class="flex h-[calc(100vh-100px)] items-center justify-center  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
       <div class="bg-blue-800  max-w-md w-full p-10 rounded-md" >
       {
         SignInErrors.map((error, i) => (

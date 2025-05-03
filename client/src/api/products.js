@@ -1,8 +1,8 @@
 import axios from "./axios";
 
 // const API = 'http://localhost:4000/api';
+// const API = 'https://perfumes-julian.vercel.app/api';
 
-// export const getProductsRequest = () => axios.get(`${API}/products`);
 export const getProductsRequest = () => axios.get(`/products`);
 
 export const getProductRequest = (id) => axios.get(`/products/${id}`);

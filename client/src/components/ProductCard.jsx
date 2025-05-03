@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
   return (
-    <Link to={`/products/${product.id}`} className="block w-full">
+    <Link to={`/products/${product.id}`} className="block w-full  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
       <div 
         key={product.id} 
-        className="bg-white text-black rounded-lg mb-3 p-4 w-full h-64 flex flex-col"
+        className="bg-white text-black rounded-lg mb-3 p-4 w-full h-64 flex flex-col  dark:border-gray-600 dark:bg-gray-900 dark:text-white"
         style={{
           boxShadow: '0 4px 6px -1px rgba(46, 41, 78, 0.3), 0 2px 4px -1px rgba(46, 41, 78, 0.2)'
         }}

@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from 'react'
+import { FaMoon, FaSun } from 'react-icons/fa'
+import { ThemeCotext } from '../context/ThemeContextProvider'
 import {
   Navbar,
   Typography,
@@ -9,8 +11,9 @@ import Logo from "../images/EMIMPORTADOSLOGO_NEGRO_SIN_FONDO.png"
 
 export function NavBar() {
   const { isAuthenticated, logout, user } = useAuth();
+   const {theme, toggleTheme} = useContext(ThemeCotext)
   return (
-    <Navbar className="w-full px-4 py-3 bg-white text-white shadow-none rounded-none">
+    <Navbar className="w-full px-4 py-3 bg-white text-white shadow-none rounded-none  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         {/* Logo ajustado */}
         <Link to="/" className="flex items-center">
@@ -83,7 +86,9 @@ export function NavBar() {
             </>
           )}
           
-
+        <button className='text-2xl text-dark' onClick={toggleTheme}>
+            {theme === "light" ? <FaMoon /> : <FaSun />}
+        </button>
           {/* <Typography
             as="li"
             variant="small"

@@ -7,8 +7,8 @@ function ProductFormPage() {
   const { createProduct } = useProducts();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
-  const preset_name = "jvu2gwik";
-  const cloud_name = "djsqt7j6v";
+  const preset_name = "eymimportados";
+  const cloud_name = "dd5qc02kn";
 
   const uploadImage = async (e) => {
     const files = e.target.files;

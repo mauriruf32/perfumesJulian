@@ -10,6 +10,7 @@ import ProductFormPage from "./pages/ProductFormPage";
 import ProfilePage from "./pages/ProfilePage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProtectedRoute from "./ProtectedRoute";
+import ThemeContextProvider from "./context/ThemeContextProvider";
 
 // Componente que decide mostrar el Footer
 const FooterVisibility = () => {
@@ -25,7 +26,8 @@ const App = () => {
     <AuthProvider>
       <ProductProvider>
         <BrowserRouter>
-          <main className="container content-container mx-auto px-10 md:px-0">
+        <ThemeContextProvider>
+           <main className="container content-container mx-auto px-10 md:px-0">
             <NavBar />
             <Routes>
               <Route path="/" element={<HomePage/>} />
@@ -39,6 +41,8 @@ const App = () => {
             </Routes>
             <FooterVisibility /> {/* Reemplazamos <Footer /> por este componente */}
           </main>
+        </ThemeContextProvider>
+         
         </BrowserRouter>
       </ProductProvider>
     </AuthProvider>

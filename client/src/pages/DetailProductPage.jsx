@@ -63,7 +63,7 @@ const DetailProductPage = () => {
     };
 
     return (
-        <div className='min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
+        <div className='min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8  dark:border-gray-600 dark:bg-gray-900 dark:text-white'>
             {loading && (
                 <div className="text-center py-12">
                     <p className="text-lg text-gray-600">Cargando...</p>
