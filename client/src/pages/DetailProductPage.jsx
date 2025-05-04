@@ -2,13 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import Marquee from "react-fast-marquee";
+import ProductCard from '../components/ProductCard';
+import { useProducts } from '../context/ProductsContext';
 
 const DetailProductPage = () => {
     const { id } = useParams();
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { getProducts, products } = useProducts();
 
+    useEffect(() => {
+      getProducts()
+    }, [])
+    
     const mostrarMediosDePago = () => {
         Swal.fire({
             title: 'Medios de Pago',
@@ -63,16 +71,16 @@ const DetailProductPage = () => {
     };
 
     return (
-        <div className='min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8  dark:border-gray-600 dark:bg-gray-900 dark:text-white'>
+        <div className='min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 dark:border-gray-600 dark:bg-gray-900 dark:text-white'>
             {loading && (
                 <div className="text-center py-12">
-                    <p className="text-lg text-gray-600">Cargando...</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300">Cargando...</p>
                 </div>
             )}
             
             {error && (
                 <div className="text-center py-12">
-                    <p className="text-lg text-red-500">Error: {error}</p>
+                    <p className="text-lg text-red-500 dark:text-red-400">Error: {error}</p>
                 </div>
             )}
 
@@ -80,26 +88,26 @@ const DetailProductPage = () => {
                 product.map((item) => (
                     <div 
                         key={item.id}
-                        className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden"
+                        className="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-12"
                     >
                         <div className="md:flex">
                             {/* Columna izquierda - Imagen */}
-                            <div className="md:w-1/2 p-6 flex justify-center items-center">
+                            <div className="md:w-1/2 p-6 flex justify-center items-center ">
                                 <img 
                                     src={item.image} 
                                     alt={item.name}
-                                    className="max-h-96 w-full object-contain"
-                                />
+                                    className="max-h-96  object-contain rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-transform hover:scale-105"
+/>
                             </div>
                             
                             {/* Columna derecha - Datos */}
                             <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                                     {item.name}
                                 </h1>
                                 
                                 <div className="mt-4">
-                                    <p className="text-2xl text-gray-800">
+                                    <p className="text-2xl text-gray-800 dark:text-gray-200">
                                         <span className="font-semibold">Precio:</span> ${formatPrice(item.price)}
                                     </p>
                                 </div>
@@ -119,10 +127,29 @@ const DetailProductPage = () => {
             ) : (
                 !loading && (
                     <div className="text-center py-12">
-                        <p className="text-lg text-gray-600">No se encontró el producto</p>
+                        <p className="text-lg text-gray-600 dark:text-gray-300">No se encontró el producto</p>
                     </div>
                 )
             )}
+
+            {/* Sección de productos relacionados */}
+            <div className="mt-16">
+                <h2 className="text-2xl font-bold text-center mb-8 dark:text-white">Otros productos que te pueden interesar</h2>
+                <Marquee 
+                    pauseOnHover={true}
+                    speed={50}
+                    gradient={false}
+                    className="py-4"
+                >
+                    <div className="flex space-x-20 px-4">
+                        {products.filter(p => p.id !== id).map((product) => (
+                            <div key={product.id} className="w-72 flex-shrink-0">
+                                <ProductCard product={product} />
+                            </div>
+                        ))}
+                    </div>
+                </Marquee>
+            </div>
         </div>
     );
 };

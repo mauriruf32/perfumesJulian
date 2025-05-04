@@ -1,0 +1,75 @@
+.announcement {
+    background: #000; /* Fondo negro por defecto */
+    color: #fff; /* Texto blanco por defecto */
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    font-family: Tahoma;
+    font-weight: bold;
+}
+
+/* Modo oscuro (se activa cuando hay una clase 'dark' en el HTML) */
+.dark .announcement {
+    background: #1a1a1a; /* Un negro más suave para el dark mode */
+    color: #e5e5e5; /* Texto gris claro para mejor legibilidad */
+}
+
+/* El resto de tus estilos... */
+.announcement-text {
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.text1 span {
+    margin-right: 5rem;
+}
+
+.text2 span:not(:last-child),
+.text3 span:not(:last-child) {
+    margin-right: 5rem;
+}
+
+.text2 span:last-child,
+.text3 span:last-child {
+    margin-right: 5rem;
+}
+/* .announcement{
+    background: #000;
+    color: #fff;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem 0;
+    font-size: .8rem;
+    font-family: Tahoma;
+    font-weight: bold;
+}
+
+.announcement-text{
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.text1 span{
+    margin-right: 5rem;
+}
+
+.text2 span:not(:last-child){
+    margin-right: 5rem;
+}
+
+.text2 span:last-child{
+    margin-right: 5rem;
+}
+
+.text3 span:not(:last-child){
+    margin-right: 5rem;
+}
+
+.text3 span:last-child{
+    margin-right: 5rem;
+} */

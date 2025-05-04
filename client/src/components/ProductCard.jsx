@@ -2,16 +2,16 @@ import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
   return (
-    <Link to={`/products/${product.id}`} className="block w-full  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+    <Link to={`/products/${product.id}`} className="block w-60  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
       <div 
         key={product.id} 
-        className="bg-white text-black rounded-lg mb-3 p-4 w-full h-64 flex flex-col  dark:border-gray-600 dark:bg-gray-900 dark:text-white"
+        className="bg-white text-black rounded-lg mb-3 p-4 w-60 h-64 flex flex-col"
         style={{
           boxShadow: '0 4px 6px -1px rgba(46, 41, 78, 0.3), 0 2px 4px -1px rgba(46, 41, 78, 0.2)'
         }}
       >
         {/* Contenedor de imagen con tamaño fijo */}
-        <div className="h-40 flex-grow-0 overflow-hidden">
+        <div className="h-40 flex-grow-0 overflow-hidden rounded-xl">
           <img
             src={product.image}
             alt={product.name}
@@ -24,7 +24,7 @@ function ProductCard({ product }) {
           <h5 className="text-lg font-medium line-clamp-2">
             {product.name}  
           </h5>
-          <h2 className="text-xl font-semibold text-gray-800 mt-2">
+          <h2 className="text-xl font-semibold mt-2">
             ${product.price}
           </h2>
         </div>
