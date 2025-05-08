@@ -7,6 +7,18 @@ CREATE TABLE products (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE fragrance_notes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE  
+);
+
+CREATE TABLE product_fragrance_notes (
+    product_id INT REFERENCES products(id),
+    note_id INT REFERENCES fragrance_notes(id),
+    position INT NOT NULL CHECK (position BETWEEN 1 AND 8), 
+    PRIMARY KEY (product_id, position)  
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY, 
     name VARCHAR(255) NOT NULL,
@@ -21,4 +33,5 @@ CREATE TABLE orders (
     product_id INTEGER REFERENCES products(id), 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTachometerAlt, FaUser, FaBox, FaCog } from 'react-icons/fa';
+import { FaTachometerAlt, FaUser, FaBox, FaCog, FaAngleDoubleUp } from 'react-icons/fa';
 
 const SideBar = ({ activeTab, setActiveTab, onNavItemClick }) => {
   return (
@@ -46,6 +46,17 @@ const SideBar = ({ activeTab, setActiveTab, onNavItemClick }) => {
           >
             <FaCog />
             <span className="hidden md:inline">Crear Productos</span>
+          </li>
+
+          <li 
+            className={`flex items-center py-3 px-2 space-x-4 hover:rounded hover:cursor-pointer hover:text-white hover:bg-blue-600 ${activeTab === 'settings' ? 'bg-blue-600 text-white' : ''}`}
+            onClick={() => {
+              setActiveTab('notes');
+              onNavItemClick && onNavItemClick();
+            }}
+          >
+            <FaAngleDoubleUp />
+            <span className="hidden md:inline">Crear Notes</span>
           </li>
         </ul>
       </div>

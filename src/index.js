@@ -4,6 +4,7 @@ import userRoutes from "./routes/users.routes.js";
 import productsRoutes from "./routes/products.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import ordersRoutes from "./routes/orders.routes.js";
+import notesRoutes from "./routes/notes.routes.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
@@ -22,6 +23,7 @@ app.use("/", userRoutes);
 app.use("/api", productsRoutes);
 app.use("/api", authRoutes);
 app.use("/api", ordersRoutes);
+app.use("/api", notesRoutes);
 
 app.listen(PORT);
 

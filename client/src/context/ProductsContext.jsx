@@ -1,11 +1,13 @@
 import { createContext, useContext, useState } from "react";
+import axios from "axios";
+import { getProductWithNotesRequest, createNoteRequest, getNotesRequest, assignNoteToProductRequest } from "../api/fragrance_notes";
 import { 
     getProductRequest, 
     getProductsRequest, 
     deleteProductRequest, 
     getProductByNameRequest, 
     updateProductRequest,
-    createProductRequest, 
+    createProductRequest,
 } from "../api/products";
 
 const ProductContext = createContext();
@@ -71,6 +73,53 @@ export function ProductProvider({ children }) {
          }
     }
  
+    const getProductWithNotes = async (id) => {
+        try {
+            const res = await getProductWithNotesRequest(id);
+            return res.data;
+        } catch (error) {
+            console.error(error);
+        }
+       
+    }
+
+    const createNote = async (note) => {
+        const res = await createNoteRequest(note);
+        console.log(res);
+    }
+
+    const getNotes = async () => {
+        try {
+            const res = await getNotesRequest();
+            return res.data;
+        } catch (error) {
+            console.error(error);
+        }
+       
+    }
+
+    //  const assignNoteToProduct = async (productId, noteId, position) => {
+    //     try {
+    //         const res = await axios.post(`/notes/product-notes`, {
+    //             product_id: productId,
+    //             note_id: noteId,
+    //             position
+    //         });
+    //         return res.data;
+    //     } catch (error) {
+    //         console.error("Error en assignNoteToProduct:", error);
+    //         throw error; // Opcional: re-lanzar el error para manejo externo
+    //     }
+    // };
+    const assignNoteToProduct = async (productId, noteId, position) => {
+        try {
+            const res = await assignNoteToProductRequest(productId, noteId, position);
+            return res.data;
+        } catch (error) {
+            console.error("Error en assignNoteToProduct:", error);
+            throw error;
+        }
+    };
 
     return (
         <ProductContext.Provider 
@@ -82,6 +131,10 @@ export function ProductProvider({ children }) {
             getProductByName,
             getProductById,
             updateProduct,
+            getProductWithNotes,
+            createNote,
+            getNotes,
+            assignNoteToProduct,
         }}
         >
             {children}

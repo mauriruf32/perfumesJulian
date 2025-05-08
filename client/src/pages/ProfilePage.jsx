@@ -5,6 +5,7 @@ import ShowProducts from '../components/ShowProducts';
 import ShowUsers from '../components/ShowUsers';
 import ProductFormPage from './ProductFormPage';
 import { FiMenu } from 'react-icons/fi';
+import FragranceNoteForm from '../components/CreateFragranceNote';
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState('products');
@@ -41,6 +42,7 @@ function ProfilePage() {
                 {/* Contenido del dashboard centrado */}
                 <div className="flex justify-center">
                   {/* Aquí tu contenido centrado */}
+
                 </div>
               </div>
             )}
@@ -68,6 +70,16 @@ function ProfilePage() {
                 <h2 className="text-2xl font-bold mb-4 text-center md:text-left">Configuración</h2>
                 <div className="flex justify-center">
                   <ProductFormPage />
+                </div>
+              </div>
+            )}
+                        
+            {activeTab === 'notes' && (
+              <div className='w-full'>
+                <h2 className="text-2xl font-bold mb-4 text-center md:text-left">notes</h2>
+                <div className="flex justify-center">
+                <FragranceNoteForm />
+
                 </div>
               </div>
             )}
