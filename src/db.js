@@ -1,7 +1,7 @@
 import pg from 'pg';
 // const { Pool } = require('pg')
 import  Pool  from 'pg';
-import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER, POSTGRES_URL, POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DATABASE } from './config.js';
+import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from './config.js';
 
 export const pool = new pg.Pool({
     user: DB_USER,
