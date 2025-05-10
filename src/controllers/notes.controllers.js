@@ -58,6 +58,21 @@ export const deleteNote = async (req, res) => {
     }
 };
 
+export const deleteProductWhitNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rowCount } = await pool.query('DELETE FROM product_fragrance_notes WHERE id = $1', [id]);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ error: 'fragance_notes no encontrada' });
+        }
+
+        res.status(200).json({ message: 'fragance_notes eliminada correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar la fragance_notes', details: error.message });
+    }
+};
+
 export const assignNoteToProduct = async (req, res) => {
     try {
         const { product_id, note_id, position } = req.body;

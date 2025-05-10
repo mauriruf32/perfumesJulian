@@ -37,15 +37,33 @@ export const createProduct = async (req, res) => {
     }
 };
 
-export const deleteProduct = async (req, res) => {
-    const { id } = req.params;
-    const { rowCount } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+// export const deleteProduct = async (req, res) => {
+//     const { id } = req.params;
+//     const { rowCount } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
 
-    if (rowCount === 0) {
-        return res.status(400).json({ messege: 'product no encontrado'});
-    }
+//     if (rowCount === 0) {
+//         return res.status(400).json({ messege: 'product no encontrado'});
+//     }
    
-    return res.sendStatus(204);
+//     return res.sendStatus(204);
+// };
+
+
+export const deleteProduct = async (req, res) => {
+const { id } = req.params;
+  
+  try {
+    // Primero eliminar las notas de fragancia asociadas
+    await pool.query('DELETE FROM product_fragrance_notes WHERE product_id = $1', [id]);
+    
+    // Luego eliminar el producto
+    await pool.query('DELETE FROM products WHERE id = $1', [id]);
+    
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al eliminar el producto' });
+  }
 };
 
 export const updateProduct = async (req, res) => {

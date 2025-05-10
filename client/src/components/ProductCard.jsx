@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
+      const formatPrice = (price) => {
+        return price.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
+    };
   return (
     <Link to={`/products/${product.id}`} className="block w-60  dark:border-gray-600 dark:bg-gray-900 dark:text-white">
       <div 
@@ -25,7 +28,7 @@ function ProductCard({ product }) {
             {product.name}  
           </h5>
           <h2 className="text-xl font-semibold mt-2">
-            ${product.price}
+             ${formatPrice(product.price)}
           </h2>
         </div>
       </div>

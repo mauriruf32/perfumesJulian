@@ -68,7 +68,7 @@ const DetailProductPage = () => {
     }, [id]);
 
     const formatPrice = (price) => {
-        return typeof price === 'number' ? price.toFixed(2) : parseFloat(price).toFixed(2);
+        return price.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
     };
 
     return (
@@ -89,20 +89,16 @@ const DetailProductPage = () => {
                 product.map((item) => (
                     <div 
                         key={item.id}
-                        className="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-12"
+                        className="max-w-6xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-xl shadow-blue-gray-900 overflow-hidden mb-12"
                     >
                         <div className="md:flex">
                             {/* Columna izquierda - Imagen */}
-                            <div className="md:w-1/2 p-6 flex flex-col justify-center items-center">
+                            <div className="md:w-1/2 p-6 flex flex-col justify-center items-center ">
                                 <img 
                                     src={item.image} 
                                     alt={item.name}
-                                    className="max-h-96 object-contain rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-transform hover:scale-105 mb-6"
+                                    className="max-h-96 object-contain rounded-lg shadow-md shadow-blue-gray-900 border border-gray-200 dark:border-gray-700 transition-transform hover:scale-105 mb-6"
                                 />
-                                {/* Integración de FragranceNotes con el id del producto */}
-                                <div className="w-full">
-                                <FragranceNotes id={item.id} />
-                                </div>
                             </div>
                             
                             {/* Columna derecha - Datos */}
@@ -125,6 +121,18 @@ const DetailProductPage = () => {
                                         Medios de pago
                                     </button>
                                 </div>
+                                                                {/* Integración de FragranceNotes con el id del producto */}
+                                <div className="w-full">
+                                <FragranceNotes id={item.id} />
+                                </div>
+                            </div>
+                        </div>
+                         <div className="w-full py-6 px-20 text-justify font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                            <h6 className=" text-xl mb-3">
+                                Descripcion
+                            </h6>
+                            <div className=" text-justify font-semibold ">
+                                {item.description}
                             </div>
                         </div>
                     </div>
@@ -317,64 +325,6 @@ export default DetailProductPage;
 //                     </div>
 //                 </Marquee>
 //             </div>
-//         </div>
-//     );
-// };
-
-// export default DetailProductPage;
-
-// import React, { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-
-// const DetailProductPage = () => {
-//     const { id } = useParams();
-//     const [product, setProduct] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(null);
-
-//     useEffect(() => {
-//         const fetchProduct = async () => {
-//             try {
-//                 const response = await axios.get(`http://localhost:4000/api/products/${id}`, {
-//                     headers: {
-//                         'Cache-Control': 'no-cache, no-store, must-revalidate',
-//                         'Pragma': 'no-cache',
-//                         'Expires': '0',
-//                     },
-//                 });
-
-//                 console.log("Datos obtenidos del API:", response.data);
-
-//                 const data = Array.isArray(response.data) ? response.data : [response.data];
-//                 setProduct(data);
-//             } catch (err) {
-//                 console.error("Error al obtener el producto:", err);
-//                 setError(err.response?.data?.message || "Error al obtener el producto");
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchProduct();
-//     }, [id]);
-
-
-//     return (
-//         <div className='flex justify-center items-center text-black'>
-//             {loading && <p>Cargando...</p>}
-//             {error && <p>Error: {error}</p>}
-//             {!loading && !error && product.length > 0 ? (
-//                 product.map((item) => (
-//                     <div key={item.id}>
-//                         <img src={item.image} alt='' />
-//                         <h1>Nombre: {item.name}</h1>
-//                         <p>Precio: {item.price}</p>
-//                     </div>
-//                 ))
-//             ) : (
-//                 !loading && <p>No se encontró el producto</p>
-//             )}
 //         </div>
 //     );
 // };

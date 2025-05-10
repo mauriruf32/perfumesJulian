@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getNote, createNote,  getNotes, assignNoteToProduct, getProductWithNotesById, getProductsWithNotes } from "../controllers/notes.controllers.js";
+import { getNote, createNote,  getNotes, assignNoteToProduct, getProductWithNotesById, getProductsWithNotes, deleteProductWhitNote, deleteNote } from "../controllers/notes.controllers.js";
 import { authRequired } from "../middlewares/validateToken.js";
 
 
@@ -9,9 +9,13 @@ router.get('/notes', getNotes);
 
 router.get('/notes/:id', getNote);
 
+router.delete('/notes/:id', authRequired, deleteNote);
+
 router.post('/notes', authRequired, createNote);
 
 router.post('/notes/product-notes', authRequired, assignNoteToProduct);
+
+router.delete('/notes/product-notes/:id', authRequired, deleteProductWhitNote);
 
 router.get('/notes/product-notes', getProductsWithNotes);
 
