@@ -1,6 +1,6 @@
 
-export const TOKEN_SECRET = process.env.TOKEN_SECRET
-// export const TOKEN_SECRET = process.env.TOKEN_SECRET || 'fallback-secret-32-chars-1234567890abc';
+// export const TOKEN_SECRET = process.env.TOKEN_SECRET
+export const TOKEN_SECRET = process.env.TOKEN_SECRET || 'fallback-secret-32-chars-1234567890abc';
 
 export const DB_USER = process.env.DB_USER 
 export const DB_HOST = process.env.DB_HOST 
