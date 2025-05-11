@@ -16,6 +16,16 @@ app.use(cors({
     credentials: true
 }))
 
+
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(cookieParser());
+app.use("/", userRoutes);
+app.use("/api", productsRoutes);
+app.use("/api", authRoutes);
+app.use("/api", ordersRoutes);
+app.use("/api", notesRoutes);
+
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -27,15 +37,9 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(cookieParser());
-app.use("/", userRoutes);
-app.use("/api", productsRoutes);
-app.use("/api", authRoutes);
-app.use("/api", ordersRoutes);
-app.use("/api", notesRoutes);
 
-app.listen(PORT);
+app.listen(PORT, () => {
+    console.log("Server listen om Port:", PORT);
+});
 
-console.log("Server listen om Port:", PORT);
+
