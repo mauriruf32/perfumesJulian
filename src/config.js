@@ -25,4 +25,4 @@ export const URL = process.env.URL
 
 export const POSTGRES_URL = process.env.POSTGRES_URL
 
-export const PORT = process.env.PORT;
+export const PORT = process.env.PORT || 4000;
