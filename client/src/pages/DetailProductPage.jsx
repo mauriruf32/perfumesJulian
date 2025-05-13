@@ -6,6 +6,8 @@ import Marquee from "react-fast-marquee";
 import ProductCard from '../components/ProductCard';
 import FragranceNotes from '../components/FragranceNotes';
 import { useProducts } from '../context/ProductsContext';
+import { URL } from "../config.js";
+
 
 const DetailProductPage = () => {
     const { id } = useParams();
@@ -44,7 +46,7 @@ const DetailProductPage = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/products/${id}`, {
+                const response = await axios.get(`${URL}/products/${id}`, {
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
