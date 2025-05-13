@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { URL } from "../config.js";
+
 
 function FragranceNotes({ id }) {
     const [notes, setNotes] = useState([]);
@@ -11,7 +13,7 @@ function FragranceNotes({ id }) {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `http://localhost:4000/api/notes/product-notes/${id}`
+                    `${URL}/notes/product-notes/${id}`
                 );
                 
                 if (response.data.success && response.data.data && response.data.data.fragrance_notes) {
