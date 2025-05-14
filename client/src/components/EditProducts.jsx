@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useProducts } from "../context/ProductsContext";
+import {URL} from "../config.js"
 
 const EditProduct = () => {
     const [products, setProducts] = useState([]);
@@ -17,7 +18,7 @@ const EditProduct = () => {
         const fetchProducts = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`http://localhost:4000/api/products`, {
+                const response = await fetch(`${URL}/products`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -58,7 +59,7 @@ const EditProduct = () => {
         setError(null);
 
         try {
-            const response = await fetch(`http://localhost:4000/api/products/${productId}`, {
+            const response = await fetch(`${URL}/products/${productId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
