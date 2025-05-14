@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from 'react';
+import {URL} from "../config.js"
 
 const ShowUsers = () => {
     const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ const ShowUsers = () => {
     const getUsers = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:4000/users`);
+            const res = await axios.get(`${URL}/users`);
             setUsers(res.data);
             setError(null);
         } catch (err) {
@@ -27,7 +28,7 @@ const ShowUsers = () => {
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de eliminar este usuario?")) {
             try {
-                await axios.delete(`http://localhost:4000/users/${id}`);
+                await axios.delete(`${URL}/users/${id}`);
                 getUsers(); // Actualizar la lista después de eliminar
             } catch (err) {
                 console.error("Error al eliminar el usuario:", err);
