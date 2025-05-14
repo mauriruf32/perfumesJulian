@@ -20,7 +20,7 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", userRoutes);
+app.use("/api", userRoutes);
 app.use("/api", productsRoutes);
 app.use("/api", authRoutes);
 app.use("/api", ordersRoutes);
