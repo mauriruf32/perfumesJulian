@@ -41,22 +41,50 @@ export const createNote = async (req, res) => {
             details: error.message 
         });
     }
-};0
+};
 
 export const deleteNote = async (req, res) => {
+    const { id } = req.params;
+    const client = await pool.connect();
+    
     try {
-        const { id } = req.params;
-        const { rowCount } = await pool.query('DELETE FROM fragance_notes WHERE id = $1', [id]);
-
+        await client.query('BEGIN');
+        
+        // 1. Primero eliminar las referencias en product_fragrance_notes
+        await client.query('DELETE FROM product_fragrance_notes WHERE note_id = $1', [id]);
+        
+        // 2. Luego eliminar la nota
+        const { rowCount } = await client.query('DELETE FROM fragrance_notes WHERE id = $1', [id]);
+        
         if (rowCount === 0) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: 'fragance_notes no encontrada' });
         }
-
+        
+        await client.query('COMMIT');
         res.status(200).json({ message: 'fragance_notes eliminada correctamente' });
     } catch (error) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: 'Error al eliminar la fragance_notes', details: error.message });
+    } finally {
+        client.release();
     }
 };
+
+// export const deleteNote = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { rowCount } = await pool.query('DELETE FROM fragrance_notes WHERE id = $1', [id]);
+
+//         if (rowCount === 0) {
+//             return res.status(404).json({ error: 'fragance_notes no encontrada' });
+//         }
+
+//         res.status(200).json({ message: 'fragance_notes eliminada correctamente' });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error al eliminar la fragance_notes', details: error.message });
+//     }
+// };
 
 export const deleteProductWhitNote = async (req, res) => {
     try {

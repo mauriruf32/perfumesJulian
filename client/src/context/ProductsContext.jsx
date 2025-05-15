@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { getProductWithNotesRequest, createNoteRequest, getNotesRequest, assignNoteToProductRequest } from "../api/fragrance_notes";
+import { getProductWithNotesRequest, createNoteRequest, getNotesRequest, assignNoteToProductRequest, deleteNoteRequest } from "../api/fragrance_notes";
 import { 
     getProductRequest, 
     getProductsRequest, 
@@ -53,6 +53,16 @@ export function ProductProvider({ children }) {
         try {
         const res = await deleteProductRequest(id);
         if (res.status === 204) setProducts(products.filter(product => product.id != id));
+            
+        } catch (error) {
+        console.log(error);
+            
+        }
+    }
+
+    const deleteNote = async (id) => {
+        try {
+      await deleteNoteRequest(id);
             
         } catch (error) {
         console.log(error);
@@ -135,6 +145,7 @@ export function ProductProvider({ children }) {
             createNote,
             getNotes,
             assignNoteToProduct,
+            deleteNote,
         }}
         >
             {children}

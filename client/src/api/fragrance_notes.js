@@ -4,6 +4,8 @@ export const createNoteRequest = note => axios.post(`/notes`, note);
 
 export const getNotesRequest = () => axios.get(`/notes`);
 
+export const deleteNoteRequest = id => axios.delete(`/notes/${id}`);
+
 export const assignNoteToProductRequest = (product_id, note_id, position) => 
     axios.post(`/notes/product-notes`, product_id, note_id, position);
 
