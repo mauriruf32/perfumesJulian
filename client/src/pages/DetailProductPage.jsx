@@ -154,11 +154,11 @@ const DetailProductPage = () => {
                     pauseOnHover={true}
                     speed={50}
                     gradient={false}
-                    className="py-4"
+                    className="py-4 "
                 >
-                    <div className="flex space-x-20 px-4">
+                    <div className="flex space-x-20 px-10 ">
                         {products.filter(p => p.id !== id).map((product) => (
-                            <div key={product.id} className="w-72 flex-shrink-0">
+                            <div key={product.id} className="w-34 flex-shrink-0">
                                 <ProductCard product={product} />
                             </div>
                         ))}

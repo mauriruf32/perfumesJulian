@@ -18,7 +18,7 @@ function ProductCard({ product }) {
         }}
       >
         {/* Contenedor de imagen (más pequeño en móviles) */}
-        <div className="h-24 xs:h-28 sm:h-36 md:h-40 flex-shrink-0 overflow-hidden rounded-md sm:rounded-lg">
+        <div className="h-28 xs:h-28 sm:h-36  mt-3 md:h-40 flex-shrink-0 overflow-hidden rounded-md sm:rounded-lg">
           <img
             src={product.image}
             alt={product.name}
@@ -27,7 +27,7 @@ function ProductCard({ product }) {
         </div>
 
         {/* Contenido ajustado */}
-        <div className="mt-1 sm:mt-1 text-center flex flex-col justify-end flex-grow">
+        <div className="mt-0 sm:mt-0 text-center flex flex-col justify-end flex-grow">
           <h5 className="text-[0.7rem] xs:text-xs sm:text-sm md:text-sm font-medium line-clamp-2">
             {product.name}
           </h5>
