@@ -129,7 +129,7 @@ const DetailProductPage = () => {
                                 </div>
                             </div>
                         </div>
-                         <div className="w-full py-6 px-20 text-justify font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                         <div className="w-full py-3 px-10 text-justify font-semibold mb-3 text-gray-800 dark:text-gray-200">
                             <h6 className=" text-xl mb-3">
                                 Descripcion
                             </h6>

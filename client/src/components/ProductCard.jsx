@@ -22,16 +22,16 @@ function ProductCard({ product }) {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className=" h-full object-contain rounded-lg justify-self-center shadow-md shadow-blue-gray-900 border border-gray-200 dark:border-gray-700"
           />
         </div>
 
         {/* Contenido ajustado */}
-        <div className="mt-1 sm:mt-2 text-center flex flex-col justify-end flex-grow">
-          <h5 className="text-[0.7rem] xs:text-xs sm:text-sm md:text-base font-medium line-clamp-2">
+        <div className="mt-1 sm:mt-1 text-center flex flex-col justify-end flex-grow">
+          <h5 className="text-[0.7rem] xs:text-xs sm:text-sm md:text-sm font-medium line-clamp-2">
             {product.name}
           </h5>
-          <h2 className="text-xs xs:text-sm sm:text-base md:text-lg font-semibold mt-0.5 sm:mt-1 md:mt-2">
+          <h2 className="text-xs xs:text-sm sm:text-base md:text-l font-semibold mt-0.5 sm:mt-1 md:mt-1">
             ${formatPrice(product.price)}
           </h2>
         </div>
