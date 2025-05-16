@@ -67,7 +67,7 @@ function ProfilePage() {
             
             {activeTab === 'settings' && (
               <div className='w-full'>
-                <h2 className="text-2xl font-bold mb-4 text-center md:text-left">Configuración</h2>
+                <h2 className="text-2xl font-bold mb-4 text-center md:text-left">Productos</h2>
                 <div className="flex justify-center">
                   <ProductFormPage />
                 </div>
@@ -76,7 +76,7 @@ function ProfilePage() {
                         
             {activeTab === 'notes' && (
               <div className='w-full'>
-                <h2 className="text-2xl font-bold mb-4 text-center md:text-left">notes</h2>
+                <h2 className="text-2xl font-bold mb-4 text-center md:text-left">Notes</h2>
                 <div className="flex justify-center">
                 <FragranceNoteForm />
 

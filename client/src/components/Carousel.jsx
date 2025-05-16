@@ -1,6 +1,7 @@
 import { Carousel } from "@material-tailwind/react";
-import image1 from "../images/carrousel 1.png";
-import image2 from "../images/SorteoAnuncio.png";
+import image1 from "../images/Imagen-perfumes-banner.png";
+import image2 from "../images/Imagen-envios-banner.png";
+import image3 from "../images/Imagen-sorteo-banner.png";
 
 export function CarouselDefault() {
   return (
@@ -22,7 +23,7 @@ export function CarouselDefault() {
         className="h-full w-full object-cover"
       />
       <img
-        src={image1}
+        src={image3}
         alt="image 3"
         className="h-full w-full object-cover"
       />

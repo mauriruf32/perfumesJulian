@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaTachometerAlt, FaUser, FaBox, FaCog, FaAngleDoubleUp } from 'react-icons/fa';
+import { FaTachometerAlt, FaUser, FaBox, FaAngleDoubleUp } from 'react-icons/fa';
+import { GiDelicatePerfume, GiPerfumeBottle  } from "react-icons/gi";
 
 const SideBar = ({ activeTab, setActiveTab, onNavItemClick }) => {
   return (
@@ -44,8 +45,8 @@ const SideBar = ({ activeTab, setActiveTab, onNavItemClick }) => {
               onNavItemClick && onNavItemClick();
             }}
           >
-            <FaCog />
-            <span className="hidden md:inline">Crear Productos</span>
+           <GiDelicatePerfume />
+            <span className="hidden md:inline">Crear Producto</span>
           </li>
 
           <li 
@@ -55,8 +56,8 @@ const SideBar = ({ activeTab, setActiveTab, onNavItemClick }) => {
               onNavItemClick && onNavItemClick();
             }}
           >
-            <FaAngleDoubleUp />
-            <span className="hidden md:inline">Crear Notes</span>
+            <GiPerfumeBottle />
+            <span className="hidden md:inline">Crear Note</span>
           </li>
         </ul>
       </div>

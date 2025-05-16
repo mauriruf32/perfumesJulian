@@ -11,7 +11,7 @@ router.get('/products/:id', getProduct);
 
 router.post('/products', authRequired, createProduct);
 
-router.delete('/products/:id',  deleteProduct);
+router.delete('/products/:id', authRequired, deleteProduct);
 
 router.put('/products/:id', authRequired, updateProduct);
 
