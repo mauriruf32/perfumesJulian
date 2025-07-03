@@ -1,7 +1,7 @@
 import { Carousel } from "@material-tailwind/react";
 import image1 from "../images/Imagen-perfumes-banner.png";
 import image2 from "../images/Imagen-envios-banner.png";
-import image3 from "../images/Imagen-sorteo-banner.png";
+import image3 from "../images/Imagen-juego-banner.png";
 
 export function CarouselDefault() {
   return (
