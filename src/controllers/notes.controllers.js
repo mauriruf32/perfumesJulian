@@ -255,7 +255,7 @@ export const getProductWithNotesById = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error al obtener el producto con sus notas de fragancia',
-            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            error: error.message
         });
     }
 };
