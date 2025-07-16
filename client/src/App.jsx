@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProductFormPage from "./pages/ProductFormPage";
+import EditProductForm from "../src/components/EditProducts";
 import ProfilePage from "./pages/ProfilePage";
 import DetailProductPage from "./pages/DetailProductPage";
 import ProtectedRoute from "./ProtectedRoute";
@@ -40,6 +41,7 @@ const App = () => {
                   <Route element={<ProtectedRoute/>}>
                     <Route path="/register" element={<RegisterPage/>} />
                     <Route path="/addproduct" element={<ProductFormPage/>} />
+                    <Route path="/products/edit/:id" element={<EditProductForm/>} />
                     <Route path="/profile" element={<ProfilePage/>} />
                   </Route>
                 </Routes>
@@ -54,6 +56,7 @@ const App = () => {
 };
 
 export default App;
+
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { ProductProvider } from "./context/ProductsContext";
 // import { NavBar } from "./components/NavBar";

@@ -1,474 +1,363 @@
-import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useProducts } from "../context/ProductsContext";
-import {URL} from "../config.js"
+import { URL } from "../config.js";
 
-const EditProduct = () => {
-    const [products, setProducts] = useState([]);
-    const [editedProduct, setEditedProduct] = useState({});
-    const [editStatus, setEditStatus] = useState({});
-    const [sortConfig, setSortConfig] = useState({
-        key: null,
-        direction: "asc",
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const { updateProduct } = useProducts();
+function EditProductForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { register, handleSubmit, setValue } = useForm();
+  const { updateProduct } = useProducts(); // solo usamos updateProduct ahora
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch(`${URL}/products`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error("Failed to fetch products");
-                }
-                const data = await response.json();
-                setProducts(data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-                setError(error.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
+  const [originalProduct, setOriginalProduct] = useState(null);
 
-        fetchProducts();
-    }, []);
+  const preset_name = "eymimportados";
+  const cloud_name = "dd5qc02kn";
 
-    const handleEdit = (productId, product) => {
-        setEditStatus((prev) => ({ ...prev, [productId]: true }));
-        setEditedProduct({ ...product });
-    };
+  // ✅ Función local para obtener el producto
+// Dentro del componente EditProductForm
 
-    const handleFieldChange = (fieldName, value) => {
-        setEditedProduct(prev => ({
-            ...prev,
-            [fieldName]: fieldName === "price" ? parseFloat(value) : 
-                        fieldName === "deleted" ? value === "true" : value
-        }));
-    };
+const getProductById = async (id) => {
+  try {
+    const res = await fetch(`${URL}/products/${id}`);
+    const data = await res.json();
 
-    const handleInlineUpdate = async (productId, e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch(`${URL}/products/${productId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editedProduct),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to update product");
-            }
-
-            const updatedProduct = await response.json();
-            setProducts(prev => prev.map(p => p.id === productId ? updatedProduct : p));
-            setEditStatus(prev => ({ ...prev, [productId]: false }));
-            setEditedProduct({});
-        } catch (error) {
-            console.error("Error updating product:", error);
-            setError(error.message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const renderInputField = (fieldName, value, productId) => {
-        if (fieldName === "deleted") {
-            return (
-                <select
-                    value={editedProduct[fieldName] ?? false}
-                    onChange={(e) => handleFieldChange(fieldName, e.target.value)}
-                    className="form-select"
-                >
-                    <option value="false">No</option>
-                    <option value="true">Sí</option>
-                </select>
-            );
-        }
-
-        return (
-            <input
-                type={fieldName === "price" ? "number" : "text"}
-                value={editedProduct[fieldName] ?? ""}
-                onChange={(e) => handleFieldChange(fieldName, e.target.value)}
-                className="form-control"
-            />
-        );
-    };
-
-    const renderTableCell = (product, fieldName) => {
-        const isEditing = editStatus[product.id];
-        
-        return (
-            <td key={fieldName}>
-                {isEditing ? (
-                    renderInputField(fieldName, product[fieldName], product.id)
-                ) : fieldName === "deleted" ? (
-                    product[fieldName] ? "Sí" : "No"
-                ) : (
-                    product[fieldName]
-                )}
-            </td>
-        );
-    };
-
-    const handleSort = (key) => {
-        setSortConfig(prev => ({
-            key,
-            direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc"
-        }));
-    };
-
-    const sortedProducts = React.useMemo(() => {
-        return [...products].sort((a, b) => {
-            if (!sortConfig.key) return 0;
-            
-            const aValue = a[sortConfig.key];
-            const bValue = b[sortConfig.key];
-            
-            if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-            if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
-            return 0;
-        });
-    }, [products, sortConfig]);
-
-    if (isLoading && products.length === 0) return <div>Loading...</div>;
-    if (error) return <div className="alert alert-danger">Error: {error}</div>;
-
-    return (
-        <div className="container mt-4">
-            <h2>Editar Productos</h2>
-            
-            {error && <div className="alert alert-danger mb-3">{error}</div>}
-
-            <div className="table-responsive">
-                <table className="table table-striped table-hover">
-                    <thead className="table-dark">
-                        <tr>
-                            <th onClick={() => handleSort("name")}>Nombre</th>
-                            <th onClick={() => handleSort("description")}>Descripción</th>
-                            <th onClick={() => handleSort("price")}>Precio</th>
-                            <th onClick={() => handleSort("deleted")}>Eliminado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sortedProducts.map(product => (
-                            <tr key={product.id}>
-                                {renderTableCell(product, "name")}
-                                {renderTableCell(product, "description")}
-                                {renderTableCell(product, "price")}
-                                {renderTableCell(product, "deleted")}
-                                <td>
-                                    {editStatus[product.id] ? (
-                                        <>
-                                            <button 
-                                                onClick={(e) => handleInlineUpdate(product.id, e)}
-                                                className="btn btn-success btn-sm me-2"
-                                                disabled={isLoading}
-                                            >
-                                                {isLoading ? "Guardando..." : "Guardar"}
-                                            </button>
-                                            <button 
-                                                onClick={() => setEditStatus(prev => ({ ...prev, [product.id]: false }))}
-                                                className="btn btn-secondary btn-sm"
-                                            >
-                                                Cancelar
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <button 
-                                            onClick={() => handleEdit(product.id, product)}
-                                            className="btn btn-primary btn-sm"
-                                        >
-                                            Editar
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
+    // Manejo de formato de respuesta
+    if (Array.isArray(data)) {
+      return data[0]; // ✅ cuando backend responde [ {...} ]
+    } else if (Array.isArray(data.product)) {
+      return data.product[0]; // ✅ cuando responde { product: [ {...} ] }
+    } else if (typeof data === "object" && data.product) {
+      return data.product; // ✅ cuando responde { product: {...} }
+    } else {
+      console.warn("Formato de respuesta inesperado:", data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al obtener el producto:", error);
+    return null;
+  }
 };
 
-export default EditProduct;
 
-// import React, { useState, useEffect } from "react";
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const product = await getProductById(id);
+        console.log("Producto cargado:", product);
+        if (product) {
+          setOriginalProduct(product);
+          setValue("name", product.name);
+          setValue("price", product.price);
+          setValue("description", product.description);
+          setValue("image", product.image);
+          setFile(product.image);
+        }
+      } catch (error) {
+        console.error("Error al cargar el producto:", error);
+      }
+    }
+    loadProduct();
+  }, [id, setValue]);
 
-// const EditProduct = () => {
-//     const [products, setProducts] = useState([]);
-//     const [editedProduct, setEditedProduct] = useState({});
-//     const [editStatus, setEditStatus] = useState({});
-//     const [sortConfig, setSortConfig] = useState({
-//       key: null,
-//       direction: "asc",
-//     });
+  const uploadImage = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", preset_name);
+    setFile(URL.createObjectURL(files[0]));
+    setLoading(true);
 
-//     useEffect(() => {
-//       const fetchProducts = async () => {
-//         try {
-//           const response = await fetch(`http://localhost:4000/api/products`, {
-//             method: "GET",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//           });
-//           const data = await response.json();
-//           setProducts(data);
-//         } catch (error) {
-//           console.error("Error fetching products:", error);
-//         }
-//       };
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const file = await response.json();
+      setValue("image", file.secure_url);
+    } catch (error) {
+      console.error("Error al subir la imagen:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//       fetchProducts();
-//     }, []);
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await updateProduct(id, data);
+      alert("Producto actualizado correctamente");
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error);
+    }
+  });
 
-//     const handleEdit = (productId, product) => {
-//       setEditStatus((prevEditStatus) => ({
-//         ...prevEditStatus,
-//         [productId]: true,
-//       }));
-//       setEditedProduct({ ...product });
-//     };
+  return (
+    <div className="p-4 bg-white dark:bg-gray-900 rounded shadow max-w-6xl mx-auto mt-8">
+      <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">
+        Editar Producto
+      </h2>
 
-//     const handleFieldChange = (fieldName, value) => {
-//       setEditedProduct((prevEditedProduct) => ({
-//         ...prevEditedProduct,
-//         [fieldName]: fieldName === "price" ? parseFloat(value) : value,
-//       }));
-//     };
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* 🧾 Columna izquierda: vista previa original */}
+        <div className="md:w-1/2 bg-gray-100 dark:bg-gray-800 p-4 rounded shadow">
+          <h3 className="text-md font-semibold mb-4 text-gray-700 dark:text-white">
+            Información actual
+          </h3>
+          {originalProduct ? (
+            <div className="space-y-4">
+              {["name", "price", "description"].map((key) => (
+                <div key={key}>
+                  <strong className="capitalize text-gray-600 dark:text-gray-300">
+                    {key}:
+                  </strong>
+                  <p className="text-gray-800 dark:text-white">
+                    {originalProduct[key]}
+                  </p>
+                </div>
+              ))}
+              <div>
+                <strong className="text-gray-600 dark:text-gray-300">Imagen actual:</strong>
+                <img
+                  src={originalProduct.image}
+                  alt="Producto"
+                  className="w-full h-48 object-contain mt-2 rounded border"
+                />
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">Cargando información...</p>
+          )}
+        </div>
 
-//     const handleInlineUpdate = async (productId, e) => {
-//       e.preventDefault();
+        {/* 📝 Columna derecha: formulario editable */}
+        <form
+          onSubmit={onSubmit}
+          className="md:w-1/2 bg-white dark:bg-gray-900 p-4 rounded shadow"
+        >
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
+            <input
+              type="text"
+              {...register("name", { required: true })}
+              className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+            />
+          </div>
 
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">Precio</label>
+            <input
+              type="number"
+              step="0.01"
+              {...register("price", { required: true })}
+              className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
+            <textarea
+              {...register("description", { required: true })}
+              className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">Nueva imagen</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={uploadImage}
+              className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+            />
+            {file && (
+              <img
+                src={file}
+                alt="Vista previa"
+                className="w-full h-48 object-contain mt-2 rounded border"
+              />
+            )}
+            {loading && <p className="text-blue-500 text-sm">Subiendo imagen...</p>}
+            <input type="hidden" {...register("image")} />
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={() => navigate("/profile")}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              disabled={loading}
+            >
+              {loading ? "Guardando..." : "Actualizar"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default EditProductForm;
+
+
+
+
+// import { useForm } from "react-hook-form";
+// import { useProducts } from "../context/ProductsContext";
+// import { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+
+// function EditProductForm() {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+//   const { register, handleSubmit, setValue } = useForm();
+//   const { updateProduct, getProductById } = useProducts();
+//   const [loading, setLoading] = useState(false);
+//   const [file, setFile] = useState(null);
+
+//   const preset_name = "eymimportados";
+//   const cloud_name = "dd5qc02kn";
+
+//   useEffect(() => {
+//     async function loadProduct() {
 //       try {
-//         const response = await fetch(`http://localhost:4000/api/products/${productId}`, {
-//           method: "PUT",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(editedProduct),
-//         });
-
-//         if (response.ok) {
-//           const updatedProduct = await response.json();
-//           setProducts((prevProducts) =>
-//             prevProducts.map((p) => (p.id === productId ? updatedProduct : p))
-//           );
-//           setEditStatus((prevEditStatus) => ({
-//             ...prevEditStatus,
-//             [productId]: false,
-//           }));
-//           setEditedProduct({});
-//         } else {
-//           const errorData = await response.json();
-//           console.error("Error updating product. Server response:", errorData);
+//         const product = await getProductById(id);
+//         if (product) {
+//           setValue("name", product.name);
+//           setValue("price", product.price);
+//           setValue("description", product.description);
+//           setValue("image", product.image);
+//           setFile(product.image);
 //         }
 //       } catch (error) {
-//         console.error("Error updating product:", error);
+//         console.error("Error al cargar el producto:", error);
 //       }
-//     };
+//     }
+//     loadProduct();
+//   }, [id, setValue, getProductById]);
 
-//     const renderInputField = (fieldName, value, options = []) => (
-//       <div className="input-field">
-//         <label>{fieldName}:</label>
-//         {options.length ? (
-//           <select
-//             value={value !== undefined ? value : ""}
-//             onChange={(e) => handleFieldChange(fieldName, e.target.value)}
-//           >
-//             <option value="">Select...</option>
-//             {options.map((option) => (
-//               <option key={option} value={option}>
-//                 {option}
-//               </option>
-//             ))}
-//           </select>
-//         ) : (
-//           <input
-//             type={fieldName === "deleted" ? "checkbox" : "text"}
-//             value={
-//               fieldName === "deleted" ? value : value !== undefined ? value : ""
-//             }
-//             onChange={(e) => handleFieldChange(fieldName, e.target.value)}
-//           />
-//         )}
-//       </div>
-//     );
+//   const uploadImage = async (e) => {
+//     const files = e.target.files;
+//     const data = new FormData();
+//     data.append("file", files[0]);
+//     data.append("upload_preset", preset_name);
+//     setFile(URL.createObjectURL(files[0]));
+//     setLoading(true);
 
-//     const renderTableHeader = () => {
-//       const headers = [
-//         "Name",
-//         "Description",
-//         "Price",
-//         // "Stock",
-//         // "Size",
-//         // "Color",
-//         // "Material",
-//         // "Category",
-//         "Deleted",
-//         "Actions",
-//       ];
-
-//       return (
-//         <tr>
-//           {headers.map((header) =>
-//             renderHeaderCell(header.toLowerCase(), header)
-//           )}
-//         </tr>
-//       );
-//     };
-
-//     const renderHeaderCell = (key, title) => (
-//       <th key={key} onClick={() => handleSort(key)}>
-//         {title}
-//         {sortConfig.key === key && (
-//           <span>{sortConfig.direction === "asc" ? " ▲" : " ▼"}</span>
-//         )}
-//       </th>
-//     );
-
-//     const renderTableCell = (product, fieldName) => {
-//       const isEditing = editStatus[product.id];
-//       const value = isEditing ? editedProduct[fieldName] : product[fieldName];
-
-//       return (
-//         <td key={fieldName}>
-//           {isEditing ? (
-//             fieldName === "deleted" ? (
-//               <div className="input-field">
-//                 <label></label>
-//                 <select
-//                   value={value || false}
-//                   onChange={(e) =>
-//                     handleFieldChange(fieldName, e.target.value === "true")
-//                   }
-//                 >
-//                   <option value={true}>Sí</option>
-//                   <option value={false}>No</option>
-//                 </select>
-//               </div>
-//             ) : (
-//               renderInputField(fieldName, value, getOptionsForField(fieldName))
-//             )
-//           ) : fieldName === "deleted" ? (
-//             value ? (
-//               "Sí"
-//             ) : (
-//               "No"
-//             )
-//           ) : (
-//             value
-//           )}
-//         </td>
-//       );
-//     };
-
-//     const renderTable = () => {
-//       const sortedProducts = [...products].sort((a, b) => {
-//         if (sortConfig.key) {
-//           const keyA = a[sortConfig.key];
-//           const keyB = b[sortConfig.key];
-//           if (keyA < keyB) {
-//             return sortConfig.direction === "asc" ? -1 : 1;
-//           }
-//           if (keyA > keyB) {
-//             return sortConfig.direction === "asc" ? 1 : -1;
-//           }
+//     try {
+//       const response = await fetch(
+//         `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+//         {
+//           method: "POST",
+//           body: data,
 //         }
-//         return 0;
-//       });
-
-//       return (
-//         <div className="row">
-//           <div className="col">
-//             <table className="table">
-//               <thead className="table-primary">{renderTableHeader()}</thead>
-//               <tbody>
-//                 {sortedProducts.map((product) => (
-//                   <tr key={product.id}>
-//                     {renderTableCell(product, "name")}
-//                     {renderTableCell(product, "description")}
-//                     {renderTableCell(product, "price")}
-//                     {/* {renderTableCell(product, "stock")}
-//                     {renderTableCell(product, "size")}
-//                     {renderTableCell(product, "color")}
-//                     {renderTableCell(product, "material")}
-//                     {renderTableCell(product, "category")}*/}
-//                     {renderTableCell(product, "deleted")} 
-//                     <td>
-//                       {editStatus[product.id] ? (
-//                         <>
-//                           <button
-//                             className="save-btn"
-//                             onClick={(e) => handleInlineUpdate(product.id, e)}
-//                           >
-//                             Save
-//                           </button>
-//                           <button
-//                             className="cancel-btn"
-//                             onClick={() =>
-//                               setEditStatus((prevEditStatus) => ({
-//                                 ...prevEditStatus,
-//                                 [product.id]: false,
-//                               }))
-//                             }
-//                           >
-//                             Cancel
-//                           </button>
-//                         </>
-//                       ) : (
-//                         <button onClick={() => handleEdit(product.id, product)}>
-//                           Edit
-//                         </button>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
 //       );
-//     };
+//       const file = await response.json();
+//       setValue("image", file.secure_url);
+//     } catch (error) {
+//       console.error("Error al subir la imagen:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-//     const handleSort = (key) => {
-//       let direction = "asc";
-//       if (sortConfig.key === key && sortConfig.direction === "asc") {
-//         direction = "desc";
-//       }
-//       setSortConfig({ key, direction });
-//     };
+//   const onSubmit = handleSubmit(async (data) => {
+//     try {
+//       await updateProduct(id, data);
+//       alert("Producto actualizado correctamente");
+//       navigate("/profile"); // volver a la lista
+//     } catch (error) {
+//       console.error("Error al actualizar el producto:", error);
+//     }
+//   });
 
-//     const getOptionsForField = (fieldName) => {
-//       switch (fieldName) {
-//         case "color":
-//           return ["Rojo", "Azul", "Naranja", "Amarillo", "Verde", "Otro"];
-//         default:
-//           return [];
-//       }
-//     };
+//   return (
+//     <div className="p-4 bg-white dark:bg-gray-900 rounded shadow max-w-xl mx-auto mt-8">
+//       <form onSubmit={onSubmit}>
+//         <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-white">
+//           Editar Producto
+//         </h2>
 
-//     return (
-//       <div className="edit-prod">
-//         {renderTable()}
-//       </div>
-//     );
-// };
+//         <div className="mb-4">
+//           <label className="block text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
+//           <input
+//             type="text"
+//             {...register("name", { required: true })}
+//             className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+//           />
+//         </div>
 
-// export default EditProduct;
+//         <div className="mb-4">
+//           <label className="block text-gray-700 dark:text-gray-300 mb-1">Precio</label>
+//           <input
+//             type="number"
+//             step="0.01"
+//             {...register("price", { required: true })}
+//             className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+//           />
+//         </div>
+
+//         <div className="mb-4">
+//           <label className="block text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
+//           <textarea
+//             {...register("description", { required: true })}
+//             className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+//           />
+//         </div>
+
+//         <div className="mb-4">
+//           <label className="block text-gray-700 dark:text-gray-300 mb-1">Imagen</label>
+//           <input
+//             type="file"
+//             accept="image/*"
+//             onChange={uploadImage}
+//             className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+//           />
+//           {file && (
+//             <img
+//               src={file}
+//               alt="Vista previa"
+//               className="w-full h-48 object-contain mt-2 rounded border"
+//             />
+//           )}
+//           {loading && <p className="text-blue-500 text-sm">Subiendo imagen...</p>}
+//           <input type="hidden" {...register("image")} />
+//         </div>
+
+//         <div className="flex justify-end space-x-2">
+//           <button
+//             type="button"
+//             onClick={() => navigate("/products")}
+//             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+//           >
+//             Cancelar
+//           </button>
+//           <button
+//             type="submit"
+//             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+//             disabled={loading}
+//           >
+//             {loading ? "Guardando..." : "Actualizar"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+// export default EditProductForm;
+
+
+

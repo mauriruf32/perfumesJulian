@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useProducts } from "../context/ProductsContext";
 import axios from '../api/axios'; // Importamos la instancia configurada de axios
+import { Link } from 'react-router-dom';
 
 const ShowProducts = () => {
     const [products, setProducts] = useState([]);
@@ -165,6 +167,8 @@ const ShowProducts = () => {
                 <thead className="bg-gray-100 dark:bg-gray-700">
                     <tr>
                         <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Nombre</th>
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Imagen</th>
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Precio</th>
                         <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Descripción</th>
                         <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Acciones</th>
                     </tr>
@@ -174,8 +178,22 @@ const ShowProducts = () => {
                         <>
                             <tr key={`product-${product.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td className="py-3 px-4 text-gray-800 dark:text-gray-200">{product.name}</td>
+                                <img
+                                src={product.image}
+                                alt="Vista previa"
+                                className="mt-2 h-40 object-contain rounded border"
+                                />
+                                <td className="py-3 px-4 text-gray-700 dark:text-gray-200">{product.price}</td>
                                 <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{product.description}</td>
                                 <td className="py-3 px-4 space-x-2">
+                                    <Link to={`/products/edit/${product.id}`}>
+                                                                        <button 
+                                        className="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-red-600 transition"
+                                    >
+                                        Editar
+                                    </button>
+                                    </Link>
+
                                     <button 
                                         onClick={() => handleDelete(product.id)}
                                         className="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
@@ -249,6 +267,8 @@ const ShowProducts = () => {
 };
 
 export default ShowProducts;
+
+
 // import axios from "axios";
 // import { useState, useEffect } from 'react';
 // import { useProducts } from "../context/ProductsContext";
@@ -348,60 +368,3 @@ export default ShowProducts;
 
 // export default ShowProducts;
 
-// import axios from "axios";
-// import { useState, useEffect } from 'react';
-// import { useProducts } from "../context/ProductsContext";
-
-
-// const ShowProducts = ({ product }) => {
-//     const [ products, setProduct] = useState([]);
-//     const { deleteProduct } = useProducts();
-
-//     useEffect(() =>{
-//         getProducts();
-//     },[]);
-
-//     const getProducts = async () => {
-//         const res = await axios.get(`http://localhost:4000/api/products`);
-//         setProduct(res.data)
-//     };
-
-//     // const deleteProduct = async (id) => {
-//     //     axios.delete(`http://localhost:4000/api/products/${id}`);
-//     //     getProducts();
-//     // };
-
-//     return (
-
-//     <div className="show-prod">
-//         <div className="row">
-//             <div className="col">
-//                 <table className="table">
-//                     <thead className="table-primary"> 
-//                         <tr>
-//                             <th>Title</th>
-//                             <th>Contente</th>
-//                             <th>Actions</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         { products.map ((product) => (
-//                             <tr key={product.id}>
-//                                 <td>{product.name}</td>
-//                                 <td>{product.description}</td>
-//                                 <td>
-//                                     {/* <Link to={`/products/edit/${product.id}`} className="btn btn-info">Editar</Link> */}
-//                                     <button onClick={() => deleteProduct(product.id)} className="btn btn-danger">Eliminar</button>
-//                                 </td>
-//                             </tr>
-//                         ))};
-//                     </tbody>
-//                 </table>
-//             </div>
-//         </div>
-//     </div>
-
-//     );
-// };
-
-// export default ShowProducts;
