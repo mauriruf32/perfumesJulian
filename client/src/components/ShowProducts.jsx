@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useProducts } from "../context/ProductsContext";
-import axios from '../api/axios'; // Importamos la instancia configurada de axios
+import axios from '../api/axios'; 
 import { Link } from 'react-router-dom';
 
 const ShowProducts = () => {
@@ -162,107 +162,90 @@ const ShowProducts = () => {
     }
 
     return (
-        <div className="w-full overflow-x-auto">
-            <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-                <thead className="bg-gray-100 dark:bg-gray-700">
-                    <tr>
-                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Nombre</th>
-                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Imagen</th>
-                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Precio</th>
-                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Descripción</th>
-                        <th className="py-3 px-4 text-left font-semibold text-gray-700 dark:text-gray-200">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {products.map((product) => (
-                        <>
-                            <tr key={`product-${product.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td className="py-3 px-4 text-gray-800 dark:text-gray-200">{product.name}</td>
-                                <img
-                                src={product.image}
-                                alt="Vista previa"
-                                className="mt-2 h-40 object-contain rounded border"
-                                />
-                                <td className="py-3 px-4 text-gray-700 dark:text-gray-200">{product.price}</td>
-                                <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{product.description}</td>
-                                <td className="py-3 px-4 space-x-2">
-                                    <Link to={`/products/edit/${product.id}`}>
-                                                                        <button 
-                                        className="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-red-600 transition"
-                                    >
-                                        Editar
-                                    </button>
-                                    </Link>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-6 p-4">
+        {products.map((product) => (
+        <div key={product.id} className="max-w-sm bg-white dark:bg-gray-800 rounded overflow-hidden shadow-lg">
+            <img
+            className="w-full h-48 object-contain"
+            src={product.image}
+            alt={product.name}
+            />
+            <div className="px-6 py-4">
+            <div className="font-bold text-xl mb-2 text-gray-800 dark:text-white">{product.name}</div>
+            <p className="text-gray-700 dark:text-gray-300 text-base">
+                {product.description}
+            </p>
+            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">${parseFloat(product.price).toLocaleString()}</p>
+            </div>
+<div className="px-4 pt-4 pb-3">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <Link to={`/products/edit/${product.id}`}>
+      <button className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition text-sm">
+        Editar
+      </button>
+    </Link>
+    <button
+      onClick={() => handleDelete(product.id)}
+      className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm"
+    >
+      Eliminar
+    </button>
+    <button
+      onClick={() => toggleAssignNotes(product.id)}
+      className="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition text-sm"
+    >
+      {expandedProductId === product.id ? 'Ocultar' : 'Notas'}
+    </button>
+  </div>
+</div>
 
-                                    <button 
-                                        onClick={() => handleDelete(product.id)}
-                                        className="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                                    >
-                                        Eliminar
-                                    </button>
-                                    <button 
-                                        onClick={() => toggleAssignNotes(product.id)}
-                                        className="inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition"
-                                    >
-                                        {expandedProductId === product.id ? 'Ocultar' : 'Asignar Notas'}
-                                    </button>
-                                </td>
-                            </tr>
-                            
-                            {expandedProductId === product.id && (
-                                <tr key={`notes-${product.id}`}>
-                                    <td colSpan="3" className="px-4 py-3 bg-gray-50 dark:bg-gray-700">
-                                        <div className="space-y-4">
-                                            <h3 className="font-medium text-gray-800 dark:text-gray-200">
-                                                Asignar notas de fragancia a {product.name}
-                                            </h3>
-                                            
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {[...Array(8)].map((_, position) => (
-                                                    <div key={position} className="space-y-1">
-                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            Posición {position + 1}
-                                                        </label>
-                                                        <select
-                                                            className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-600"
-                                                            value={selectedNotes[position] || ''}
-                                                            onChange={(e) => handleNoteSelection(position, e.target.value)}
-                                                        >
-                                                            <option value="">Seleccionar nota</option>
-                                                            {notes.map((note) => (
-                                                                <option key={note.id} value={note.id}>
-                                                                    {note.name}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            
-                                            <div className="flex justify-end space-x-3">
-                                                <button
-                                                    onClick={() => setExpandedProductId(null)}
-                                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
-                                                >
-                                                    Cancelar
-                                                </button>
-                                                <button
-                                                    onClick={() => handleAssignNotes(product.id)}
-                                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                                                    disabled={Object.keys(selectedNotes).length === 0}
-                                                >
-                                                    Guardar Asignaciones
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </>
-                    ))}
-                </tbody>
-            </table>
+
+            {expandedProductId === product.id && (
+            <div className="px-6 pb-6">
+                <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-2">
+                Asignar notas de fragancia
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mb-4">
+                {[...Array(8)].map((_, position) => (
+                    <div key={position}>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Posición {position + 1}
+                    </label>
+                    <select
+                        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-600"
+                        value={selectedNotes[position] || ''}
+                        onChange={(e) => handleNoteSelection(position, e.target.value)}
+                    >
+                        <option value="">Seleccionar nota</option>
+                        {notes.map((note) => (
+                        <option key={note.id} value={note.id}>
+                            {note.name}
+                        </option>
+                        ))}
+                    </select>
+                    </div>
+                ))}
+                </div>
+                <div className="flex justify-center gap-2">
+                <button
+                    onClick={() => setExpandedProductId(null)}
+                    className="px-4 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
+                >
+                    Cancelar
+                </button>
+                <button
+                    onClick={() => handleAssignNotes(product.id)}
+                    className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    disabled={Object.keys(selectedNotes).length === 0}
+                >
+                    Guardar 
+                </button>
+                </div>
+            </div>
+            )}
         </div>
+        ))}
+    </div>
     );
 };
 
